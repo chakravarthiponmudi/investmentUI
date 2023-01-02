@@ -1,12 +1,32 @@
+
+// In App.js in a new project
+
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Folios from "./Domain/Funds/Folios";
+
+const Stack = createNativeStackNavigator();
+
+const HomeScreen = ({navigation}) => {
+  return (
+    <Button
+      title="Go to Jane's profile"
+      onPress={() =>
+        navigation.navigate('Profile', {name: 'Jane'})
+      }
+    />
+  );
+};
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Folios} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
