@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, SafeAreaView, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Folios from "./Domain/Funds/Folios";
+import FoliosView from './UI/funds/FoliosView';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,7 +24,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={Folios} />
+        <Stack.Screen name="Home" component={FoliosView} />
       </Stack.Navigator>
     </NavigationContainer>
   );
