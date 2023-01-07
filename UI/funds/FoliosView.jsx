@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, Text, View, StyleSheet } from 'react-native';
+import { FlatList, Text, View, StyleSheet, Button,SafeAreaView } from 'react-native';
 import FolioCard from "./FolioCard";
 import { Folio } from '../../Domain/Funds/Folio';
 import { Scheme } from '../../Domain/Funds/Scheme';
 
 
- const FoliosView = () => {
+const FoliosView = (props) => {
 
-    const [data, setData] = useState([{id:1,folio:"111",amc:"123"}]);
+    const [data, setData] = useState(null);
 
     const buildSchemeFromResponse = (resp) : [schemes] => {
         return resp.map(({advisor,folio_id,isin,scheme,type,marketValue})=> {
@@ -17,10 +17,19 @@ import { Scheme } from '../../Domain/Funds/Scheme';
 
     const getSchemes = async (folioId) => {
         try {
-            const response = await fetch(`http://localhost:8443/folios/schemes/${folioId}` );
+            const response = await fetch(`http://192.168.1.9:8443/folios/schemes/${folioId}` );
             const jResponse = await response.json();
             const schemes: [Scheme] = buildSchemeFromResponse(jResponse);
             return schemes;
+        } catch(error) {
+            console.error(error);
+        }
+    }
+
+    const getInvestmentAmount = async (folio: String) => {
+        try {
+            const response = await fetch(`http://192.168.1.9:8443/folios/investment?folio_no=${folio}` );
+            return await response.text();
         } catch(error) {
             console.error(error);
         }
@@ -40,12 +49,13 @@ import { Scheme } from '../../Domain/Funds/Scheme';
 
     const getFolios = async () => {
         try {
-            const response = await fetch('http://localhost:8443/folios/');
+            const response = await fetch('http://192.168.1.9:8443/folios/');
             const folios: [Folio] = await response.json();
             for (let folio of folios) {
                 const schemes = await getSchemes(folio.id);
                 folio.schemes = schemes;
                 getFolioMarketValue(folio);
+                folio.investmentAmount = await getInvestmentAmount(folio.folio)
             }
             
             setData(folios);
@@ -55,33 +65,49 @@ import { Scheme } from '../../Domain/Funds/Scheme';
         } 
     }
 
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: '#fff',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-    });
+    const getTotalInvestment = (folios : [Folio]) => {
+        return folios.reduce((accumulator, folio)=>{
+            return accumulator + getFolioMarketValue(folio);
+        },0)
+    }
 
     useEffect(()=> {
         getFolios();
     }, [])
 
       
+    
+
     return (
-        <View >
-            <Text style={{fontSize:20, textAlign:'center', paddingTop:'2em%', paddingBottom:'5em%'}}> FOLIOS</Text>
-            <FlatList
-                data={data}
-                keyExtractor={item => item.id}
-                renderItem={({item})=> (
-                    <FolioCard name={item.amc} schemes={item.schemes} marketValue={getFolioMarketValue(item)}/>
-                )}/>
-            
-        </View>
+        <FlatList
+            data={data}
+            keyExtractor={item => item.id}
+            renderItem={({item})=> (
+                <FolioCard name={item.amc} investmentAmount = {item.investmentAmount} schemes={item.schemes} marketValue={getFolioMarketValue(item)}/>
+            )}
+            initialNumToRender={1}
+            ListHeaderComponent={<Text style={styles.header}>Investment Profile</Text>}
+            ListFooterComponent={<Button style={{flex:1, paddingTop:'135em%'}} title="Total Investment"   onPress={() => alert(getTotalInvestment(data))}/>}
+        />
     );
 
+        
+
 }
+
+const styles = StyleSheet.create({
+    header: {
+        flex:1,
+        fontSize:20,
+        textAlign:'center',
+        justifyContent: 'flex-end',
+        marginVertical: 4,
+        marginHorizontal: 8,
+        borderRadius: 5,
+        backgroundColor: '#ffa069'
+        
+    },
+  });
+
 
 export default FoliosView;

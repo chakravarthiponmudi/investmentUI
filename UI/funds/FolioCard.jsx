@@ -1,37 +1,62 @@
-import React from 'react';
-import {Text, View, Button} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Text, View, Button} from 'react-native';
 const FolioCard = (props) => {
+
+    const [cardColor, setCardColor] = useState(styles.unselected);
     return (
-        <View style={{flexDirection: "row"}}>
-            <View style={{flex:1, padding:"2em%"}}>
-                <View style={{flexDirection: "row"}}>
-                    <Text style={{}}> Name : </Text> 
-                    <Text> {props.name}</Text>     
-                </View>
+        <View style={[styles.card, {backgroundColor: cardColor}]} onTouchStart={()=> setCardColor(styles.selected)}
+            onTouchEnd ={()=> setCardColor(styles.unselected)}>
+            <View style={{flex:1}}>
+                
+                <Text style = {styles.schemeHeading}> {props.name}</Text>     
+                
                 <View style={{flexDirection: "row"}}>
                     <Text> Schemes : </Text> 
                     <Text> {props.schemes && props.schemes.length}</Text>     
                 </View>
-                <View style={{flexDirection: "row"}}>
-                    <Text> Market Value : </Text> 
-                    <Text> {props.marketValue}</Text>     
+                <View style={{flexDirection: "row", justifyContent:'space-between'}}>
+                    <View style={{flexDirection: "row"}}>
+                        <Text> Market Value : </Text> 
+                        <Text> {Math.round(props.marketValue)}</Text>    
+                    </View>
+                    <View style={{flexDirection: "row"}}>
+                        <Text> Investment : </Text> 
+                        <Text> {Math.round(props.investmentAmount)}</Text>      
+                    </View>
+                    
                 </View>
-                <View style={{flexDirection: "row"}}>
-                    <Text> Investment : </Text> 
-                    <Text> 0</Text>     
-                </View>
-                <View style={{flexDirection: "row"}}>
-                    <Text> Gain/Loss : </Text> 
-                    <Text> 0 (%)</Text>     
-                </View>
+                
             </View>
-            <View style= {{flex:0.2,justifyContent:'center', alignItems : 'center'}}>
+            {/* <View style= {{flex:0.2,justifyContent:'center', alignItems : 'center'}}>
                 <Button title="->"   onPress={()=> alert("Button Pressed")}/>
-            </View>
+            </View> */}
         </View>
       
             
     )
 }
+
+
+const styles = StyleSheet.create({
+    card: {
+        flexDirection: "row",
+        padding: "2em%",
+        marginVertical:2,
+        marginHorizontal: 8,
+        marginRight:"2em%",
+        borderRadius:15,
+    },
+    horizontal: {
+      flexDirection: "row",
+      justifyContent: "space-around",
+      padding: 10
+    },
+    schemeHeading: {
+        textAlign: "center",
+        fontWeight: "bold"
+    },
+    unselected: '#86b0ff',
+    selected: '#5967ff'
+  });
 
 export default FolioCard;
