@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, Text, View, StyleSheet, Button,SafeAreaView } from 'react-native';
 import FolioCard from "./FolioCard";
+import FolioFooter from './FolioFooter';
 import { Folio } from '../../Domain/Funds/Folio';
 import { Scheme } from '../../Domain/Funds/Scheme';
 
@@ -17,7 +18,7 @@ const FoliosView = (props) => {
 
     const getSchemes = async (folioId) => {
         try {
-            const response = await fetch(`http://192.168.1.9:8443/folios/schemes/${folioId}` );
+            const response = await fetch(`http://192.168.1.5:8443/folios/${folioId}/schemes` );
             const jResponse = await response.json();
             const schemes: [Scheme] = buildSchemeFromResponse(jResponse);
             return schemes;
@@ -28,7 +29,7 @@ const FoliosView = (props) => {
 
     const getInvestmentAmount = async (folio: String) => {
         try {
-            const response = await fetch(`http://192.168.1.9:8443/folios/investment?folio_no=${folio}` );
+            const response = await fetch(`http://192.168.1.5:8443/folios/investment?folio_no=${folio}` );
             return await response.text();
         } catch(error) {
             console.error(error);
@@ -49,7 +50,7 @@ const FoliosView = (props) => {
 
     const getFolios = async () => {
         try {
-            const response = await fetch('http://192.168.1.9:8443/folios/');
+            const response = await fetch('http://192.168.1.5:8443/folios/');
             const folios: [Folio] = await response.json();
             for (let folio of folios) {
                 const schemes = await getSchemes(folio.id);
@@ -66,9 +67,14 @@ const FoliosView = (props) => {
     }
 
     const getTotalInvestment = (folios : [Folio]) => {
-        return folios.reduce((accumulator, folio)=>{
+        if (folios == null) {
+             return 0;
+        }
+        let amount: number = folios.reduce((accumulator, folio)=>{
             return accumulator + getFolioMarketValue(folio);
         },0)
+
+        return Math.round(amount);
     }
 
     useEffect(()=> {
@@ -86,8 +92,8 @@ const FoliosView = (props) => {
                 <FolioCard name={item.amc} investmentAmount = {item.investmentAmount} schemes={item.schemes} marketValue={getFolioMarketValue(item)}/>
             )}
             initialNumToRender={1}
-            ListHeaderComponent={<Text style={styles.header}>Investment Profile</Text>}
-            ListFooterComponent={<Button style={{flex:1, paddingTop:'135em%'}} title="Total Investment"   onPress={() => alert(getTotalInvestment(data))}/>}
+            ListHeaderComponent={<View style={styles.header}><Text style={styles.headerText}>Investment Profile</Text></View>}
+            ListFooterComponent={<FolioFooter totalInvestment={getTotalInvestment(data)}/>}
         />
     );
 
@@ -97,16 +103,23 @@ const FoliosView = (props) => {
 
 const styles = StyleSheet.create({
     header: {
-        flex:1,
-        fontSize:20,
-        textAlign:'center',
-        justifyContent: 'flex-end',
-        marginVertical: 4,
+        flexDirection: 'row',
+        justifyContent: 'center',
         marginHorizontal: 8,
-        borderRadius: 5,
-        backgroundColor: '#ffa069'
-        
+        marginVertical: 6,
+        paddingTop: 5,
+        paddingBottom: 5,
+        paddingLeft: 10,
+        paddingRight: 10,
+        backgroundColor: '#ffa069',
+        borderRadius: 10
     },
+    headerText: {
+        textAlign: 'justify',
+        // fontWeight: 'bold',
+        fontSize: 28
+    }
+
   });
 
 

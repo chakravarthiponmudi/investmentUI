@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View, Button} from 'react-native';
+import CurrencyText from '../utils/CurrencyText';
 const FolioCard = (props) => {
 
     const [cardColor, setCardColor] = useState(styles.unselected);
@@ -17,11 +18,11 @@ const FolioCard = (props) => {
                 <View style={{flexDirection: "row", justifyContent:'space-between'}}>
                     <View style={{flexDirection: "row"}}>
                         <Text> Market Value : </Text> 
-                        <Text> {Math.round(props.marketValue)}</Text>    
+                        <CurrencyText amount={Math.round(props.marketValue)} currencyCode="INR"/>    
                     </View>
                     <View style={{flexDirection: "row"}}>
                         <Text> Investment : </Text> 
-                        <Text> {Math.round(props.investmentAmount)}</Text>      
+                        <CurrencyText amount={Math.round(props.investmentAmount)} currencyCode="INR"/>    
                     </View>
                     
                 </View>
