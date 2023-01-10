@@ -48,15 +48,14 @@ const FolioDetails = ({route, navigation}): Props => {
     };
 
     const getStatementEndDate = (schemes) => {
-        console.log(schemes)
         return schemes.length> 0? schemes[0].statementEndDate:  '';
     }
     
     return (
-        <ScrollView> 
+        <ScrollView style={{backgroundColor:'#efefff'}}> 
             <View  style={styles.row}>
-                <Text> Statement Date</Text>
-                <Text> {getStatementEndDate(schemes)}</Text>
+                <Text style={{color:'blue', fontFamily:'didot'}}> Statement Date</Text>
+                <Text style={{color:'blue', fontFamily:'didot'}}> {getStatementEndDate(schemes)}</Text>
             </View>
             {renderSchemeView(schemes)}
         </ScrollView>
