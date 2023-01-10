@@ -81,6 +81,9 @@ const FoliosView = (props) => {
         getFolios();
     }, [])
 
+    const folioDetailsRoute = (folioId) => {
+        props.navigation.navigate("Folio", folioId)
+    }
       
     
 
@@ -89,7 +92,13 @@ const FoliosView = (props) => {
             data={data}
             keyExtractor={item => item.id}
             renderItem={({item})=> (
-                <FolioCard name={item.amc} investmentAmount = {item.investmentAmount} schemes={item.schemes} marketValue={getFolioMarketValue(item)}/>
+                <FolioCard name={item.amc}
+                    routerFunction={folioDetailsRoute}
+                    investmentAmount = {item.investmentAmount}
+                    schemes={item.schemes}
+                    marketValue={getFolioMarketValue(item)}
+                    folioId={item.id}
+                />
             )}
             initialNumToRender={1}
             ListHeaderComponent={<View style={styles.header}><Text style={styles.headerText}>Investment Profile</Text></View>}

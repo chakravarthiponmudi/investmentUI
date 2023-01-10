@@ -1,37 +1,51 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, Button} from 'react-native';
+import {StyleSheet, Text, View, Button, TouchableWithoutFeedback} from 'react-native';
+import { any } from 'react-native/Libraries/Text/TextNativeComponent';
 import CurrencyText from '../utils/CurrencyText';
-const FolioCard = (props) => {
+
+type Props = {
+    folioId: number;
+    name: string,
+    investmentAmount: number,
+    scheme: any,
+    routerFunction: any,
+    marketValue: number,
+};
+ 
+const FolioCard = (props):Props => {
 
     const [cardColor, setCardColor] = useState(styles.unselected);
     return (
-        <View style={[styles.card, {backgroundColor: cardColor}]} onTouchStart={()=> setCardColor(styles.selected)}
-            onTouchEnd ={()=> setCardColor(styles.unselected)}>
-            <View style={{flex:1}}>
-                
-                <Text style = {styles.schemeHeading}> {props.name}</Text>     
-                
-                <View style={{flexDirection: "row"}}>
-                    <Text> Schemes : </Text> 
-                    <Text> {props.schemes && props.schemes.length}</Text>     
-                </View>
-                <View style={{flexDirection: "row", justifyContent:'space-between'}}>
+        <TouchableWithoutFeedback onPress={()=>props.routerFunction({folioId:props.folioId})}>
+            <View style={[styles.card, {backgroundColor: cardColor}]} 
+                onTouchStart={()=> {
+                    setCardColor(styles.selected)
+                }}
+                onTouchEnd ={()=> setCardColor(styles.unselected)}
+            >
+                <View style={{flex:1}}>
+                    <Text style = {styles.schemeHeading}> {props.name}</Text>     
+                    
                     <View style={{flexDirection: "row"}}>
-                        <Text> Market Value : </Text> 
-                        <CurrencyText amount={Math.round(props.marketValue)} currencyCode="INR"/>    
+                        <Text> Schemes : </Text> 
+                        <Text> {props.schemes && props.schemes.length}</Text>     
                     </View>
-                    <View style={{flexDirection: "row"}}>
-                        <Text> Investment : </Text> 
-                        <CurrencyText amount={Math.round(props.investmentAmount)} currencyCode="INR"/>    
+                    <View style={{flexDirection: "row", justifyContent:'space-between'}}>
+                        <View style={{flexDirection: "row"}}>
+                            <Text> Market Value : </Text> 
+                            <CurrencyText amount={Math.round(props.marketValue)} currencyCode="INR"/>    
+                        </View>
+                        <View style={{flexDirection: "row"}}>
+                            <Text> Investment : </Text> 
+                            <CurrencyText amount={Math.round(props.investmentAmount)} currencyCode="INR"/>    
+                        </View>
+                        
                     </View>
                     
                 </View>
-                
             </View>
-            {/* <View style= {{flex:0.2,justifyContent:'center', alignItems : 'center'}}>
-                <Button title="->"   onPress={()=> alert("Button Pressed")}/>
-            </View> */}
-        </View>
+        </TouchableWithoutFeedback>
+
       
             
     )

@@ -15,5 +15,9 @@ Add the schmes information on the UI page.
 - Retrieve the additional details from database. API is ready. Change the UI
 
 
-## Backend
+## Tasks
 1. While adding the folios from pdf, we also need to see if the file loaded is latest. If it is latest, the folios/schemes should be marked closed, if it is not shwoing in the latest file. This needs to be validated, becuase, what if the fund is not present in the cams report.
+
+2. Folio Details screen
+
+Go through this animation tutorial on the react native.- before you proceed. I must do this.
