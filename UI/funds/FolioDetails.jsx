@@ -17,9 +17,6 @@ const FolioDetails = ({route, navigation}): Props => {
 
     const [schemes, setSchemes] = useState([]);
 
-
-
-
     const getSchemes = async (folioId: number): Scheme => {
         try {
             const response = await fetch(`http://192.168.1.5:8443/folios/${folioId}/schemes`);

@@ -10,6 +10,8 @@ const FoliosView = (props) => {
 
     const [data, setData] = useState(null);
 
+    const [totalMarketValue, setTotalMarketValue] = useState(0);
+
     const buildSchemeFromResponse = (resp) : [schemes] => {
         return resp.map(({advisor,folio_id,isin,scheme,type,marketValue})=> {
             return new Scheme(type,advisor,isin,folio_id,scheme, marketValue);
@@ -55,26 +57,32 @@ const FoliosView = (props) => {
             for (let folio of folios) {
                 const schemes = await getSchemes(folio.id);
                 folio.schemes = schemes;
-                getFolioMarketValue(folio);
                 folio.investmentAmount = await getInvestmentAmount(folio.folio)
             }
             
             setData(folios);
+            getTotalMarketValue(folios);
 
         } catch(error) {
             console.error(error);
         } 
     }
 
-    const getTotalInvestment = (folios : [Folio]) => {
+    const getTotalMarketValue = async (folios : [Folio]) => {
         if (folios == null) {
              return 0;
         }
-        let amount: number = folios.reduce((accumulator, folio)=>{
-            return accumulator + getFolioMarketValue(folio);
-        },0)
-
-        return Math.round(amount);
+        let totalAmount = 0;
+        for (let folio of folios) {
+            try {
+                const response = await fetch(`http://192.168.1.5:8443/folios/marketvalue?folio_no=${folio.folio}`);
+                const amount = await response.text();
+                totalAmount += parseFloat(amount);
+            }catch (error) {
+                console.error("getTotalMarketValue" , e);
+            }
+        }
+        setTotalMarketValue(totalAmount);
     }
 
     useEffect(()=> {
@@ -96,13 +104,13 @@ const FoliosView = (props) => {
                     routerFunction={folioDetailsRoute}
                     investmentAmount = {item.investmentAmount}
                     schemes={item.schemes}
-                    marketValue={getFolioMarketValue(item)}
                     folioId={item.id}
+                    folioName={item.folio}
                 />
             )}
             initialNumToRender={1}
             ListHeaderComponent={<View style={styles.header}><Text style={styles.headerText}>Investment Profile</Text></View>}
-            ListFooterComponent={<FolioFooter totalInvestment={getTotalInvestment(data)}/>}
+            ListFooterComponent={<FolioFooter totalMarketValue={Math.round(totalMarketValue)}/>}
         />
     );
 

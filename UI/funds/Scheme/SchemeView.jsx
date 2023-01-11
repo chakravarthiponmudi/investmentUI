@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Text, View, StyleSheet } from 'react-native';
 import { Scheme } from "../../../Domain/Funds/Scheme";
+import CurrencyText from "../../utils/CurrencyText";
 
 
 type Props = {
@@ -8,6 +9,21 @@ type Props = {
 }
 
 const SchemeView = ({scheme}) : Props => {
+
+    const [marketValue, setMarketValue] = useState(scheme.marketValue)
+
+    const getMarketValue = async ()=>{
+        try {
+            const response = await fetch(`http://192.168.1.5:8443/schemes/${scheme.isin}/marketvalue`);
+            const value :number = await response.text();
+            setMarketValue(value);
+        }catch (error) {
+            console.error(error)
+        }
+    }
+    useEffect(()=> {
+        getMarketValue();
+    })
     
     return (
         <View style={styles.container}>
@@ -18,6 +34,10 @@ const SchemeView = ({scheme}) : Props => {
             <View  style={styles.row}>
                 <Text> Total Nav</Text>
                 <Text> {scheme.close}</Text>
+            </View>
+            <View  style={styles.row}>
+                <Text> Market Value</Text>
+                <CurrencyText amount={Math.round(marketValue)} currencyCode="INR"/>
             </View>
         </View>
     );

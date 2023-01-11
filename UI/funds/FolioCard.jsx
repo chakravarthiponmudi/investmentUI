@@ -1,20 +1,40 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Button, TouchableWithoutFeedback} from 'react-native';
 import { any } from 'react-native/Libraries/Text/TextNativeComponent';
 import CurrencyText from '../utils/CurrencyText';
 
 type Props = {
-    folioId: number;
+    folioId: number,
     name: string,
+    folioName:string,
     investmentAmount: number,
     scheme: any,
     routerFunction: any,
-    marketValue: number,
 };
  
 const FolioCard = (props):Props => {
 
     const [cardColor, setCardColor] = useState(styles.unselected);
+
+
+    const [marketValue, setMarketValue] = useState(0);
+
+    const getTotalMarketValue = async () => {
+        try {
+            const response = await fetch(`http://192.168.1.5:8443/folios/marketvalue?folio_no=${props.folioName}`);
+            const amount = await response.text();
+            setMarketValue(amount)
+        }catch (error) {
+            console.error("getTotalMarketValue" , e);
+        }
+    }
+
+    useEffect(()=>{
+        getTotalMarketValue();
+    })
+
+
+
     return (
         <TouchableWithoutFeedback onPress={()=>props.routerFunction({folioId:props.folioId})}>
             <View style={[styles.card, {backgroundColor: cardColor}]} 
@@ -33,7 +53,7 @@ const FolioCard = (props):Props => {
                     <View style={{flexDirection: "row", justifyContent:'space-between'}}>
                         <View style={{flexDirection: "row"}}>
                             <Text> Market Value : </Text> 
-                            <CurrencyText amount={Math.round(props.marketValue)} currencyCode="INR"/>    
+                            <CurrencyText amount={Math.round(marketValue)} currencyCode="INR"/>    
                         </View>
                         <View style={{flexDirection: "row"}}>
                             <Text> Investment : </Text> 

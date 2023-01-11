@@ -21,3 +21,4 @@ Add the schmes information on the UI page.
 2. Folio Details screen
 
 Go through this animation tutorial on the react native.- before you proceed. I must do this.
+    - implement amfi parse in backend

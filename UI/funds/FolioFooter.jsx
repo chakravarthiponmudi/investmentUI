@@ -2,13 +2,13 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import CurrencyText from '../utils/CurrencyText';
 type Props =  {
-    totalInvestment : number,
+    totalMarketValue : number,
 }
-const FolioFooter = ({totalInvestment}: Props) => {
+const FolioFooter = ({totalMarketValue}: Props) => {
     return (
         <View style = {styles.container}>
             <Text style={styles.label}>Total Market Value</Text>
-            <CurrencyText style={styles.content} currencyCode={"INR"} amount={totalInvestment}/>
+            <CurrencyText style={styles.content} currencyCode={"INR"} amount={totalMarketValue}/>
         </View>
     )
 }
