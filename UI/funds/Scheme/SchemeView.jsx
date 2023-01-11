@@ -19,8 +19,6 @@ const SchemeView = ({scheme}) : Props => {
                 <Text> Total Nav</Text>
                 <Text> {scheme.close}</Text>
             </View>
-            
-            
         </View>
     );
 }
@@ -32,12 +30,13 @@ const styles = StyleSheet.create({
         margin: 5,
         marginLeft:10,
         marginRight: 10,
+        paddingVertical: 10,
         borderRadius:15
     },
     Heading:{
         paddingBottom:15,
         textStyling: {
-            fontFamily:'Galvji',
+            fontFamily:'Apple SD Gothic Neo Bold',
             fontSize:15,
             textAlign: 'center',
             color: 'red'
