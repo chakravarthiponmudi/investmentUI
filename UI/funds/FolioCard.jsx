@@ -22,10 +22,10 @@ const FolioCard = (props):Props => {
     const getTotalMarketValue = async () => {
         try {
             const response = await fetch(`http://192.168.1.5:8443/folios/marketvalue?folio_no=${props.folioName}`);
-            const amount = await response.text();
-            setMarketValue(amount)
+            const amount = await response.json();
+            setMarketValue(amount.EQUITY + amount.DEBT)
         }catch (error) {
-            console.error("getTotalMarketValue" , e);
+            console.error("getTotalMarketValue" , error);
         }
     }
 

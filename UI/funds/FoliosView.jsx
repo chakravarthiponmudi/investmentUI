@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, Text, View, StyleSheet, Button,SafeAreaView } from 'react-native';
+import { Text, View, StyleSheet, Button,SafeAreaView, ScrollView } from 'react-native';
 import FolioCard from "./FolioCard";
 import FolioFooter from './FolioFooter';
 import { Folio } from '../../Domain/Funds/Folio';
 import { Scheme } from '../../Domain/Funds/Scheme';
+import EquityDebtPie from '../domain/EquityDebtPie';
 
 
 const FoliosView = (props) => {
@@ -11,6 +12,8 @@ const FoliosView = (props) => {
     const [data, setData] = useState(null);
 
     const [totalMarketValue, setTotalMarketValue] = useState(0);
+
+    const [chartSeries, setChartSeries] = useState([]);
 
     const buildSchemeFromResponse = (resp) : [schemes] => {
         return resp.map(({advisor,folio_id,isin,scheme,type,marketValue})=> {
@@ -72,17 +75,31 @@ const FoliosView = (props) => {
         if (folios == null) {
              return 0;
         }
-        let totalAmount = 0;
+        let equityTotal = 0;
+        let debtTotal=0;
         for (let folio of folios) {
             try {
                 const response = await fetch(`http://192.168.1.5:8443/folios/marketvalue?folio_no=${folio.folio}`);
-                const amount = await response.text();
-                totalAmount += parseFloat(amount);
+                const amounts = await response.json();
+                equityTotal += parseFloat(amounts.EQUITY);
+                debtTotal += parseFloat(amounts.DEBT);
             }catch (error) {
-                console.error("getTotalMarketValue" , e);
+                console.error("getTotalMarketValue" , error);
             }
         }
-        setTotalMarketValue(totalAmount);
+        setTotalMarketValue(equityTotal+debtTotal);
+        const chartSeries = [
+            {
+                x: 'Equity',
+                y: Math.round(equityTotal),
+            },
+            {
+                x: 'Debt',
+                y: Math.round(debtTotal),
+            }
+        ]
+
+        setChartSeries(chartSeries)
     }
 
     useEffect(()=> {
@@ -93,25 +110,30 @@ const FoliosView = (props) => {
         props.navigation.navigate("Folio", folioId)
     }
       
+
+    const getFolioCards = (folio : Folio) => {
+        return <FolioCard key={folio.id} 
+            name={folio.amc}
+            routerFunction={folioDetailsRoute}
+            investmentAmount = {folio.investmentAmount}
+            schemes={folio.schemes}
+            folioId={folio.id}
+            folioName={folio.folio}
+        />
+    }
     
 
     return (
-        <FlatList
-            data={data}
-            keyExtractor={item => item.id}
-            renderItem={({item})=> (
-                <FolioCard name={item.amc}
-                    routerFunction={folioDetailsRoute}
-                    investmentAmount = {item.investmentAmount}
-                    schemes={item.schemes}
-                    folioId={item.id}
-                    folioName={item.folio}
-                />
-            )}
-            initialNumToRender={1}
-            ListHeaderComponent={<View style={styles.header}><Text style={styles.headerText}>Investment Profile</Text></View>}
-            ListFooterComponent={<FolioFooter totalMarketValue={Math.round(totalMarketValue)}/>}
-        />
+        <ScrollView style={{flex: 1}}>
+            <View style={styles.header}><Text style={styles.headerText}>Investment Profile</Text></View>
+            <EquityDebtPie data={chartSeries}/>
+            <View>
+                {data == null ? '' : data.map((folio)=>getFolioCards(folio))}
+                <FolioFooter totalMarketValue={Math.round(totalMarketValue)}/>
+            </View>
+            
+        </ScrollView>
+        
     );
 
         
