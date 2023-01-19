@@ -5,7 +5,8 @@ import FolioFooter from './FolioFooter';
 import { Folio } from '../../Domain/Funds/Folio';
 import { Scheme } from '../../Domain/Funds/Scheme';
 import EquityDebtPie from '../domain/EquityDebtPie';
-
+import config from "../config/Config"
+import { PlotEquityData } from '../uiTypes';
 
 const FoliosView = (props) => {
 
@@ -15,7 +16,7 @@ const FoliosView = (props) => {
 
     const [chartSeries, setChartSeries] = useState([]);
 
-    const buildSchemeFromResponse = (resp) : [schemes] => {
+    const buildSchemeFromResponse = (resp) : [Scheme] => {
         return resp.map(({advisor,folio_id,isin,scheme,type,marketValue})=> {
             return new Scheme(type,advisor,isin,folio_id,scheme, marketValue);
         })
@@ -23,7 +24,8 @@ const FoliosView = (props) => {
 
     const getSchemes = async (folioId) => {
         try {
-            const response = await fetch(`http://192.168.1.5:8443/folios/${folioId}/schemes` );
+            
+            const response = await fetch(`http://${config.server.host}:${config.server.port}/folios/${folioId}/schemes` );
             const jResponse = await response.json();
             const schemes: [Scheme] = buildSchemeFromResponse(jResponse);
             return schemes;
@@ -32,10 +34,10 @@ const FoliosView = (props) => {
         }
     }
 
-    const getInvestmentAmount = async (folio: String) => {
+    const getInvestmentAmount = async (folio: String) : Promise<number> => {
         try {
-            const response = await fetch(`http://192.168.1.5:8443/folios/investment?folio_no=${folio}` );
-            return await response.text();
+            const response = await fetch(`http://${config.server.host}:${config.server.port}/folios/investment?folio_no=${folio}` );
+            return Number.parseFloat(await response.text());
         } catch(error) {
             console.error(error);
         }
@@ -55,7 +57,7 @@ const FoliosView = (props) => {
 
     const getFolios = async () => {
         try {
-            const response = await fetch('http://192.168.1.5:8443/folios/');
+            const response = await fetch(`http://${config.server.host}:${config.server.port}/folios/`);
             const folios: [Folio] = await response.json();
             for (let folio of folios) {
                 const schemes = await getSchemes(folio.id);
@@ -79,7 +81,7 @@ const FoliosView = (props) => {
         let debtTotal=0;
         for (let folio of folios) {
             try {
-                const response = await fetch(`http://192.168.1.5:8443/folios/marketvalue?folio_no=${folio.folio}`);
+                const response = await fetch(`http://${config.server.host}:${config.server.port}/folios/marketvalue?folio_no=${folio.folio}`);
                 const amounts = await response.json();
                 equityTotal += parseFloat(amounts.EQUITY);
                 debtTotal += parseFloat(amounts.DEBT);
@@ -88,7 +90,7 @@ const FoliosView = (props) => {
             }
         }
         setTotalMarketValue(equityTotal+debtTotal);
-        const chartSeries = [
+        const chartSeries : PlotEquityData[] = [
             {
                 x: 'Equity',
                 y: Math.round(equityTotal),

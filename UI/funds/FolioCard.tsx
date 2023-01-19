@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Button, TouchableWithoutFeedback} from 'react-native';
-import { any } from 'react-native/Libraries/Text/TextNativeComponent';
 import CurrencyText from '../utils/CurrencyText';
+import config from "../config/Config";
 
 type Props = {
     folioId: number,
     name: string,
     folioName:string,
     investmentAmount: number,
-    scheme: any,
+    schemes: any,
     routerFunction: any,
 };
  
-const FolioCard = (props):Props => {
+const FolioCard = (props:Props) => {
 
     const [cardColor, setCardColor] = useState(styles.unselected);
 
@@ -21,7 +21,7 @@ const FolioCard = (props):Props => {
 
     const getTotalMarketValue = async () => {
         try {
-            const response = await fetch(`http://192.168.1.5:8443/folios/marketvalue?folio_no=${props.folioName}`);
+            const response = await fetch(`http://${config.server.host}:${config.server.port}/folios/marketvalue?folio_no=${props.folioName}`);
             const amount = await response.json();
             setMarketValue(amount.EQUITY + amount.DEBT)
         }catch (error) {
@@ -53,11 +53,11 @@ const FolioCard = (props):Props => {
                     <View style={{flexDirection: "row", justifyContent:'space-between'}}>
                         <View style={{flexDirection: "row"}}>
                             <Text> Market Value : </Text> 
-                            <CurrencyText amount={Math.round(marketValue)} currencyCode="INR"/>    
+                            <CurrencyText amount={Math.round(marketValue)} currencyCode="INR" style={undefined}/>    
                         </View>
                         <View style={{flexDirection: "row"}}>
                             <Text> Investment : </Text> 
-                            <CurrencyText amount={Math.round(props.investmentAmount)} currencyCode="INR"/>    
+                            <CurrencyText amount={Math.round(props.investmentAmount)} currencyCode="INR" style={undefined}/>    
                         </View>
                         
                     </View>
@@ -65,9 +65,6 @@ const FolioCard = (props):Props => {
                 </View>
             </View>
         </TouchableWithoutFeedback>
-
-      
-            
     )
 }
 

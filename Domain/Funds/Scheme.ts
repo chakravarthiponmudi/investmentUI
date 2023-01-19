@@ -2,12 +2,13 @@ import { Transaction } from "./Transaction";
 export class Scheme {
 
     private _transaction:[Transaction];
+    close: number;
 
     constructor(private _type : SchemeType,
-        private _advisor: String,
-        private _isin: String,
+        private _advisor: string,
+        private _isin: string,
         private _folioId : number,
-        private _name : String,
+        private _name : string,
         private _marketValue: number
 
         ) {}

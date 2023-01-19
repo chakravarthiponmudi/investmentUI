@@ -2,20 +2,21 @@ import React, {useEffect, useState} from "react";
 import { Text, View, StyleSheet } from 'react-native';
 import { Scheme } from "../../../Domain/Funds/Scheme";
 import CurrencyText from "../../utils/CurrencyText";
-
+import config from "../../config/Config"
 
 type Props = {
+    key: string
     scheme: Scheme
 }
 
-const SchemeView = ({scheme}) : Props => {
+const SchemeView = ({scheme} : Props) => {
 
     const [marketValue, setMarketValue] = useState(scheme.marketValue)
 
     const getMarketValue = async ()=>{
         try {
-            const response = await fetch(`http://192.168.1.5:8443/schemes/${scheme.isin}/marketvalue`);
-            const value :number = await response.text();
+            const response = await fetch(`http://${config.server.host}:${config.server.port}/schemes/${scheme.isin}/marketvalue`);
+            const value :number = Number.parseFloat(await response.text());
             setMarketValue(value);
         }catch (error) {
             console.error(error)
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
     Heading:{
         paddingBottom:15,
         textStyling: {
-            fontFamily:'Apple SD Gothic Neo Bold',
+            // fontFamily:'Apple SD Gothic Neo Bold',
             fontSize:15,
             textAlign: 'center',
             color: 'red'

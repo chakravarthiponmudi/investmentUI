@@ -2,9 +2,9 @@ import React from 'react';
 import {Text} from 'react-native'
 import { formatCurrency } from 'react-native-format-currency';
 type Props = {
-    currencyCode : String,
-    amount: Number,
-    style: any
+    currencyCode : string,
+    amount: number,
+    style?: any
 }
 
 const CurrencyText = ({currencyCode, amount, style}:Props) => {

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {ScrollView, Text,View,StyleSheet} from 'react-native';
 import { Scheme } from '../../Domain/Funds/Scheme';
 import SchemeView from "./Scheme/SchemeView"
+import config from "../config/Config";
+
 type Props = {
 
     route: any,
@@ -11,15 +13,15 @@ type Props = {
  
 
 
-const FolioDetails = ({route, navigation}): Props => {
+const FolioDetails = ({route, navigation} :Props) => {
 
     const {folioId} = route.params;
 
-    const [schemes, setSchemes] = useState([]);
+    const [schemes, setSchemes] = useState<Scheme[]>([]);
 
-    const getSchemes = async (folioId: number): Scheme => {
+    const getSchemes = async (folioId: number): Promise<void> => {
         try {
-            const response = await fetch(`http://192.168.1.5:8443/folios/${folioId}/schemes`);
+            const response = await fetch(`http://${config.server.host}:${config.server.port}/folios/${folioId}/schemes`);
             const schemes: [Scheme] = await response.json();
             setSchemes(schemes);
         }catch (error) {
@@ -31,7 +33,7 @@ const FolioDetails = ({route, navigation}): Props => {
         getSchemes(folioId)
     }, [])
 
-    const renderSchemeView = (schemes: [Scheme]) => {
+    const renderSchemeView = (schemes: Scheme[]) => {
         if (schemes.length >0) {
             return schemes.map((scheme) => 
                 <SchemeView key={scheme.isin} scheme={scheme} />
@@ -66,7 +68,7 @@ const styles = StyleSheet.create({
     },
     pageHeader:{
         color:'#a14a74',
-        fontFamily:'American Typewriter Semibold'
+        // fontFamily:'American Typewriter Semibold'
     },
     row:{
         flexDirection:'row',
