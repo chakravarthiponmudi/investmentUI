@@ -11,7 +11,7 @@ type Props = {
     scheme: Scheme
 }
 
-const SchemeView: React.FC = ({scheme} : Props) => {
+const SchemeView = ({scheme} : Props) => {
 
     const [marketValue, setMarketValue] = useState(scheme.marketValue)
 

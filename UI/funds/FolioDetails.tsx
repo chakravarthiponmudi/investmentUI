@@ -64,7 +64,7 @@ const FolioDetails = ({route, navigation} :Props) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#b8d69a',
+        backgroundColor: '#a8d69a',
     },
     pageHeader:{
         color:'#a14a74',

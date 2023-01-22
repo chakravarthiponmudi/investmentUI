@@ -14,7 +14,8 @@ type Props = {
  
 const FolioCard = (props:Props) => {
 
-    const [cardColor, setCardColor] = useState(styles.unselected);
+    const [cardColor, setCardColor] = useState(styles.profit);
+    const [roi, setRoi] = useState(0);
 
 
     const [marketValue, setMarketValue] = useState(0);
@@ -23,10 +24,26 @@ const FolioCard = (props:Props) => {
         try {
             const response = await fetch(`http://${config.server.host}:${config.server.port}/folios/marketvalue?folio_no=${props.folioName}`);
             const amount = await response.json();
-            setMarketValue(amount.EQUITY + amount.DEBT)
+            const marketValue = amount.EQUITY + amount.DEBT
+            setMarketValue(marketValue);
+            if (props.investmentAmount > marketValue) {
+                setCardColor(styles.loss);
+            } else {
+                const profit = marketValue - props.investmentAmount;
+                if (profit < (props.investmentAmount * 0.06)) {
+                    setCardColor(styles.underperforming);
+                }
+            }
+            calculateRoi(marketValue, props.investmentAmount);
+
         }catch (error) {
             console.error("getTotalMarketValue" , error);
         }
+    }
+
+    const calculateRoi = (markteValue : number, investment: number):void => {
+        let roi = (marketValue - investment)/investment * 100;
+        setRoi(roi);
     }
 
     useEffect(()=>{
@@ -41,15 +58,21 @@ const FolioCard = (props:Props) => {
                 onTouchStart={()=> {
                     setCardColor(styles.selected)
                 }}
-                onTouchEnd ={()=> setCardColor(styles.unselected)}
+                onTouchEnd ={()=> setCardColor(styles.profit)}
             >
                 <View style={{flex:1}}>
                     <Text style = {styles.schemeHeading}> {props.name}</Text>     
-                    
-                    <View style={{flexDirection: "row"}}>
-                        <Text> Schemes : </Text> 
-                        <Text> {props.schemes && props.schemes.length}</Text>     
+                    <View style={{flexDirection: "row", justifyContent:'space-between'}}>
+                        <View style={{flexDirection: "row"}}>
+                            <Text> Schemes : </Text> 
+                            <Text> {props.schemes && props.schemes.length}</Text>     
+                        </View>
+                        <View style={{flexDirection: "row"}}>
+                            <Text> Roi(%) : </Text> 
+                            <Text> {roi.toFixed(2)}</Text>     
+                        </View>
                     </View>
+                    
                     <View style={{flexDirection: "row", justifyContent:'space-between'}}>
                         <View style={{flexDirection: "row"}}>
                             <Text> Market Value : </Text> 
@@ -87,8 +110,10 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontWeight: "bold"
     },
-    unselected: '#86b0ff',
-    selected: '#5967ff'
+    profit: '#86b0ff',
+    selected: '#5967ff',
+    loss: 'red',
+    underperforming: 'orange'
   });
 
 export default FolioCard;
