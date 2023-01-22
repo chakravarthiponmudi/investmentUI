@@ -9,7 +9,8 @@ export class Scheme {
         private _isin: string,
         private _folioId : number,
         private _name : string,
-        private _marketValue: number
+        private _marketValue: number,
+        private _schemeCloseDate: string
 
         ) {}
 
@@ -43,6 +44,10 @@ export class Scheme {
 
     public get marketValue() {
         return this._marketValue;
+    }
+
+    public get schemeCloseDate() {
+        return this._schemeCloseDate;
     }
 }
 
