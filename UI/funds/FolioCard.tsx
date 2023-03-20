@@ -14,7 +14,7 @@ type Props = {
  
 const FolioCard = (props:Props) => {
 
-    const [cardColor, setCardColor] = useState(styles.profit);
+    const [cardColor, setCardColor] = useState(colorConstants.profit);
     const [roi, setRoi] = useState(0);
 
 
@@ -27,11 +27,11 @@ const FolioCard = (props:Props) => {
             const marketValue = amount.EQUITY + amount.DEBT
             setMarketValue(marketValue);
             if (props.investmentAmount > marketValue) {
-                setCardColor(styles.loss);
+                setCardColor(colorConstants.loss);
             } else {
                 const profit = marketValue - props.investmentAmount;
                 if (profit < (props.investmentAmount * 0.06)) {
-                    setCardColor(styles.underperforming);
+                    setCardColor(colorConstants.underperforming);
                 }
             }
             calculateRoi(marketValue, props.investmentAmount);
@@ -54,11 +54,11 @@ const FolioCard = (props:Props) => {
 
     return (
         <TouchableWithoutFeedback onPress={()=>props.routerFunction({folioId:props.folioId})}>
-            <View style={[styles.card, {backgroundColor: cardColor}]} 
+            <View style={[styles.card]} 
                 onTouchStart={()=> {
-                    setCardColor(styles.selected)
+                    setCardColor(colorConstants.selected)
                 }}
-                onTouchEnd ={()=> setCardColor(styles.profit)}
+                onTouchEnd ={()=> setCardColor(colorConstants.profit)}
             >
                 <View style={{flex:1}}>
                     <Text style = {styles.schemeHeading}> {props.name}</Text>     
@@ -110,10 +110,15 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontWeight: "bold"
     },
+    
+  });
+
+
+const colorConstants = {
     profit: '#86b0ff',
     selected: '#5967ff',
     loss: 'red',
     underperforming: 'orange'
-  });
+}
 
 export default FolioCard;

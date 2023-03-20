@@ -4,9 +4,9 @@ import FolioCard from "./FolioCard";
 import FolioFooter from './FolioFooter';
 import { Folio } from '../../Domain/Funds/Folio';
 import { Scheme } from '../../Domain/Funds/Scheme';
-import EquityDebtPie from '../domain/EquityDebtPie';
+// import EquityDebtPie from '../domain/EquityDebtPie';
 import config from "../config/Config"
-import { PlotEquityData } from '../uiTypes';
+// import { PlotEquityData } from '../uiTypes';
 
 const FoliosView = (props) => {
 
@@ -17,8 +17,8 @@ const FoliosView = (props) => {
     const [chartSeries, setChartSeries] = useState([]);
 
     const buildSchemeFromResponse = (resp) : [Scheme] => {
-        return resp.map(({advisor,folio_id,isin,scheme,type,marketValue})=> {
-            return new Scheme(type,advisor,isin,folio_id,scheme, marketValue);
+        return resp.map(({advisor,folio_id,isin,scheme,type,marketValue,schemeCloseDate})=> {
+            return new Scheme(type,advisor,isin,folio_id,scheme, marketValue,schemeCloseDate);
         })
     }
 
@@ -90,18 +90,18 @@ const FoliosView = (props) => {
             }
         }
         setTotalMarketValue(equityTotal+debtTotal);
-        const chartSeries : PlotEquityData[] = [
-            {
-                x: 'Equity',
-                y: Math.round(equityTotal),
-            },
-            {
-                x: 'Debt',
-                y: Math.round(debtTotal),
-            }
-        ]
+        // const chartSeries : PlotEquityData[] = [
+        //     {
+        //         x: 'Equity',
+        //         y: Math.round(equityTotal),
+        //     },
+        //     {
+        //         x: 'Debt',
+        //         y: Math.round(debtTotal),
+        //     }
+        // ]
 
-        setChartSeries(chartSeries)
+        // setChartSeries(chartSeries)
     }
 
     useEffect(()=> {
@@ -128,7 +128,7 @@ const FoliosView = (props) => {
     return (
         <ScrollView style={{flex: 1}}>
             <View style={styles.header}><Text style={styles.headerText}>Investment Profile</Text></View>
-            <EquityDebtPie data={chartSeries}/>
+            {/* <EquityDebtPie data={chartSeries}/> */}
             <View>
                 {data == null ? '' : data.map((folio)=>getFolioCards(folio))}
                 <FolioFooter totalMarketValue={Math.round(totalMarketValue)}/>
