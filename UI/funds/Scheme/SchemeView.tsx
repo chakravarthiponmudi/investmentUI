@@ -1,17 +1,18 @@
 import React, {useEffect, useState} from "react";
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Button } from 'react-native';
 import { Scheme } from "../../../Domain/Funds/Scheme";
 import CurrencyText from "../../utils/CurrencyText";
 import config from "../../config/Config"
 import ToggleButton from "../../utils/ToggleButton";
-import { getBounds } from "victory-core/lib/victory-util/selection";
+// import { getBounds } from "victory-core/lib/victory-util/selection";
 
 type Props = {
     key: string
     scheme: Scheme
+    transactionRouter: any
 }
 
-const SchemeView = ({scheme} : Props) => {
+const SchemeView = ({scheme, transactionRouter} : Props) => {
 
     const [marketValue, setMarketValue] = useState(scheme.marketValue)
 
@@ -43,7 +44,7 @@ const SchemeView = ({scheme} : Props) => {
                 return true;
             return false;
         } catch(e) {
-            console.log("requert failed")
+            console.log("request failed")
             console.error(e)
             return false;
         }
@@ -66,6 +67,9 @@ const SchemeView = ({scheme} : Props) => {
             <View  style={styles.row}>
                 <Text> Market Value</Text>
                 <CurrencyText amount={Math.round(marketValue)} currencyCode="INR"/>
+            </View>
+            <View  style={styles.row}>
+                <Button title="View Transactions" onPress={()=>{transactionRouter(scheme.isin)}}/>
             </View>
         </View>
     );

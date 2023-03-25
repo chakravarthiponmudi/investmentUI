@@ -33,10 +33,14 @@ const FolioDetails = ({route, navigation} :Props) => {
         getSchemes(folioId)
     }, [])
 
+    const transactionRouter = (schemeId) => {
+        navigation.navigate('TransactionView', {schemeId})
+    }
+
     const renderSchemeView = (schemes: Scheme[]) => {
         if (schemes.length >0) {
             return schemes.map((scheme) => 
-                <SchemeView key={scheme.isin} scheme={scheme} />
+                <SchemeView key={scheme.isin} scheme={scheme} transactionRouter={transactionRouter} />
             )
             
         } else {

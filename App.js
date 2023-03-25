@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import FoliosView from './UI/funds/FoliosView';
 import FolioDetails from "./UI/funds/FolioDetails";
+import TransactionView from './UI/funds/TransactionView';
 
 
 const Stack = createNativeStackNavigator();
@@ -56,6 +57,7 @@ export default function App() {
       <Stack.Navigator >
         <Stack.Screen name="Portfolio Manager" component={FoliosView} />
         <Stack.Screen name="Folio" component={FolioDetails} />
+        <Stack.Screen name="TransactionView" component={TransactionView} />
       </Stack.Navigator>
     </NavigationContainer>
   );
