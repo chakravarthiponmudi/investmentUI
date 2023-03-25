@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button,SafeAreaView, ScrollView } from 'react-native';
 import FolioCard from "./FolioCard";
 import FolioFooter from './FolioFooter';
-import { Folio } from '../../Domain/Funds/Folio';
-import { Scheme } from '../../Domain/Funds/Scheme';
+import { Folio } from '../../domain/funds/Folio';
+import { Scheme } from '../../domain/funds/Scheme';
 // import EquityDebtPie from '../domain/EquityDebtPie';
 import config from "../config/Config"
 // import { PlotEquityData } from '../uiTypes';
@@ -128,6 +128,11 @@ const FoliosView = (props) => {
     return (
         <ScrollView style={{flex: 1}}>
             <View style={styles.header}><Text style={styles.headerText}>Investment Profile</Text></View>
+            <View>
+                <Button title='Summary' onPress={()=>{
+                    props.navigation.navigate('Summary')
+                }}/>
+            </View>
             {/* <EquityDebtPie data={chartSeries}/> */}
             <View>
                 {data == null ? '' : data.map((folio)=>getFolioCards(folio))}

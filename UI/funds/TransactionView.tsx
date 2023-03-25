@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { ScrollView } from "react-native";
-import { Transaction } from "../../Domain/Funds/Transaction";
+import { Transaction } from "../../domain/funds/Transaction";
 import config from "../config/Config";
 import TransactionPresentation from "./TransactionPresentation";
 

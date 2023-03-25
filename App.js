@@ -8,45 +8,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import FoliosView from './UI/funds/FoliosView';
 import FolioDetails from "./UI/funds/FolioDetails";
 import TransactionView from './UI/funds/TransactionView';
+import Summary from './UI/funds/report/Summary';
 
 
 const Stack = createNativeStackNavigator();
 
-// const TestView = () => {
-
-//   const animation = useRef(new Animated.Value(1));
-
-//   const startAnimation = () => {
-//     Animated.timing(animation.current,{
-//       toValue:0,
-//       duration:150,
-//       useNativeDriver: false
-//     }).start(()=>{
-
-//       Animated.timing(animation.current,{
-//         toValue:1,
-//         duration:150,
-//         useNativeDriver: false
-//       }).start()
-//     })
-//   }
-
-//   const animatedStyle = {
-//     opacity : animation.current
-//   }
-//   return (
-//     <View style={styles.container}>
-//       <TouchableWithoutFeedback onPress={startAnimation}>
-//         <View>
-//           <Animated.View style={[styles.box, animatedStyle]}/>
-//         </View>
-//       </TouchableWithoutFeedback>
-//     </View>
-      
-    
-    
-//   )
-// }
 
 export default function App() {
 
@@ -58,6 +24,7 @@ export default function App() {
         <Stack.Screen name="Portfolio Manager" component={FoliosView} />
         <Stack.Screen name="Folio" component={FolioDetails} />
         <Stack.Screen name="TransactionView" component={TransactionView} />
+        <Stack.Screen name="Summary" component={Summary} />
       </Stack.Navigator>
     </NavigationContainer>
   );

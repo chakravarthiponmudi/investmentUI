@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { Text, View, StyleSheet, Button } from 'react-native';
-import { Scheme } from "../../../Domain/Funds/Scheme";
+import { Scheme } from "../../../domain/funds/Scheme";
 import CurrencyText from "../../utils/CurrencyText";
 import config from "../../config/Config"
 import ToggleButton from "../../utils/ToggleButton";

@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text, ScrollView } from "react-native";
-import { Transaction } from "../../Domain/Funds/Transaction";
+import { Transaction } from "../../domain/funds/Transaction";
 
 type Props = {
     transactions: Transaction[],

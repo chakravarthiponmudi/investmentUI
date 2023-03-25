@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {ScrollView, Text,View,StyleSheet} from 'react-native';
-import { Scheme } from '../../Domain/Funds/Scheme';
+import { Scheme } from '../../domain/funds/Scheme';
 import SchemeView from "./Scheme/SchemeView"
 import config from "../config/Config";
 
