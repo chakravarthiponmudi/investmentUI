@@ -128,11 +128,6 @@ const FoliosView = (props) => {
     return (
         <ScrollView style={{flex: 1}}>
             <View style={styles.header}><Text style={styles.headerText}>Investment Profile</Text></View>
-            <View>
-                <Button title='Summary' onPress={()=>{
-                    props.navigation.navigate('Summary')
-                }}/>
-            </View>
             {/* <EquityDebtPie data={chartSeries}/> */}
             <View>
                 {data == null ? '' : data.map((folio)=>getFolioCards(folio))}

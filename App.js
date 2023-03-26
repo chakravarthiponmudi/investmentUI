@@ -9,6 +9,7 @@ import FoliosView from './UI/funds/FoliosView';
 import FolioDetails from "./UI/funds/FolioDetails";
 import TransactionView from './UI/funds/TransactionView';
 import Summary from './UI/funds/report/Summary';
+import Home from './UI/Home';
 
 
 const Stack = createNativeStackNavigator();
@@ -21,6 +22,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator >
+        <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Portfolio Manager" component={FoliosView} />
         <Stack.Screen name="Folio" component={FolioDetails} />
         <Stack.Screen name="TransactionView" component={TransactionView} />
